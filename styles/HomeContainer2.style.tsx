@@ -93,7 +93,7 @@ export const StyledParagraph = styled.p`
 `;
 
 export const CardContainer = styled.div`
-  width: 30%;
+  width: 250px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 10px;

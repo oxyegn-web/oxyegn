@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Box2,
   FlexCol,
@@ -18,26 +18,68 @@ import {
   Checkbox,
   ForgotPasswordLink
 } from "@/styles/Signin.styled";
+import { AppDispatch } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { SigninUser } from "@/redux/slices/AuthSlices/AuthSlice";
 
-const page = () => {
+const Page = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const dispatch: AppDispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const resultAction = await dispatch(SigninUser(formData));
+      
+      if (SigninUser.fulfilled.match(resultAction)) {
+        // Redirect to home if login is successful
+        router.push("/home");
+      } else {
+        // Handle errors, e.g., show an error message
+        console.error("Login failed:", resultAction.payload || resultAction.error.message);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
   return (
     <>
       <Main>
         <Box2>
-          {/* <Close>X</Close> */}
           <Head>Let`s Login</Head>
-          <form action="">
+          <form onSubmit={handleSubmit}>
             <FlexCol>
               <Label>
                 <b>Enter email or mobile number</b>
               </Label>
-              <Input type="text" placeholder="sunny@gmail.com" />
+              <Input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="sunny@gmail.com"
+              />
             </FlexCol>
             <FlexCol>
               <Label>
                 <b>Password</b>
               </Label>
-              <Input type="password" placeholder="Enter Password" />
+              <Input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Enter Password"
+              />
             </FlexCol>
             <RememberMeRow>
               <FlexRow>
@@ -46,7 +88,7 @@ const page = () => {
               </FlexRow>
               <ForgotPasswordLink href="/forgot-password">Forgot Password?</ForgotPasswordLink>
             </RememberMeRow>
-            <NextButton>Next</NextButton>
+            <NextButton type="submit">Next</NextButton>
             <FlexRow>
               <Line />
               <Info>or</Info>
@@ -54,8 +96,8 @@ const page = () => {
             </FlexRow>
             <GoogleButton>Continue With Google</GoogleButton>
             <FlexRow style={{ marginLeft: "7rem" }}>
-              <Label>New User ?</Label>
-              <StyledLink href="/home">Register here</StyledLink>
+              <Label>New User?</Label>
+              <StyledLink href="/register">Register here</StyledLink>
             </FlexRow>
           </form>
         </Box2>
@@ -64,4 +106,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
