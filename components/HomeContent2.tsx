@@ -41,6 +41,7 @@ const HomeContent2 = () => {
   return (
     <>
       <CarouselComponent />
+      
       <Container>
         <Header>Discount Zone</Header>
         <IconsContainer>
@@ -65,13 +66,6 @@ const HomeContent2 = () => {
       </RowContainer>
 
       <AdType1 images={[{ src: Ad4 }, { src: Ad5 }, { src: Ad6 }]} />
-
-      {/* <RowContainer>
-        <ProductDetailCard />
-        <ProductDetailCard />
-        <ProductDetailCard />
-        <ProductDetailCard />
-      </RowContainer> */}
 
       <RowContainer>
         <HeaderContainer>
